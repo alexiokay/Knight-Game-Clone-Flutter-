@@ -1,37 +1,21 @@
 // screen_b.dart
+
+import 'package:myfirstapp/game_objects/Quests.dart';
+import 'package:myfirstapp/game_objects/Items.dart';
+import 'package:myfirstapp/game_objects/MapLocation.dart';
+
 import 'package:flutter/material.dart';
 
-class MapLocation {
-  String title;
-  int levelAvailability;
-  int rubinsAvalible;
-  List<Quest> quests;
+var item1 =
+    Item(title: 'Antimatter Bow', asset: 'lib/icons/duel.png', type: 'bow');
+var item2 = Item(title: 'Uriziel', asset: 'lib/icons/duel.png', type: 'sword');
+var item3 =
+    Item(title: 'Wood shield', asset: 'lib/icons/duel.png', type: 'shield');
 
-  MapLocation({
-    required this.title,
-    required this.levelAvailability,
-    required this.rubinsAvalible,
-    required this.quests,
-  });
-}
-
-class Quest {
-  String title;
-  double reward;
-  int experience;
-  bool loot;
-  int cost;
-  int progress;
-
-  Quest({
-    required this.title,
-    required this.reward,
-    required this.experience,
-    required this.loot,
-    required this.progress,
-    required this.cost,
-  });
-}
+var items = [item1, item2];
+var items2 = [item2, item3];
+var exampleRequirements = QuestRequirements(items: items);
+var exampleRequirements2 = QuestRequirements(items: items2);
 
 List<MapLocation> locations = [
   MapLocation(
@@ -46,6 +30,7 @@ List<MapLocation> locations = [
           loot: true,
           cost: 8,
           progress: 0,
+          requirements: exampleRequirements2,
         ),
         Quest(
           title: "Kill the Mad King",
@@ -54,6 +39,7 @@ List<MapLocation> locations = [
           loot: true,
           cost: 10,
           progress: 0,
+          requirements: exampleRequirements,
         ),
         Quest(
           title: "Kill spider mother",
@@ -62,6 +48,7 @@ List<MapLocation> locations = [
           loot: false,
           cost: 18,
           progress: 0,
+          requirements: exampleRequirements2,
         ),
       ])
 ];
@@ -194,12 +181,14 @@ class _ScreenQuest extends State<ScreenQuest> {
                   Column(children: [
                     for (var item in locations[0].quests) ...[
                       QuestWidget(
-                          title: item.title,
-                          reward: item.reward,
-                          experience: item.experience,
-                          loot: item.loot,
-                          cost: item.cost,
-                          progress: item.progress),
+                        title: item.title,
+                        reward: item.reward,
+                        experience: item.experience,
+                        loot: item.loot,
+                        cost: item.cost,
+                        progress: item.progress,
+                        requirements: item.requirements,
+                      ),
                       SizedBox(height: 50),
                     ],
                   ]),
@@ -220,6 +209,7 @@ class QuestWidget extends StatefulWidget {
   final bool? loot;
   final int? cost;
   final int? progress;
+  final QuestRequirements requirements;
 
   const QuestWidget({
     Key? key,
@@ -229,6 +219,7 @@ class QuestWidget extends StatefulWidget {
     this.loot,
     this.cost,
     this.progress,
+    required this.requirements,
   }) : super(key: key);
 
   @override
@@ -360,7 +351,10 @@ class _QuestWidget extends State<QuestWidget> {
                             //button
                           ]),
                     ),
-                    Visibility(visible: _isVisible, child: Prerequisities())
+                    Visibility(
+                        visible: _isVisible,
+                        child:
+                            Prerequisities(requirements: widget.requirements))
                   ]),
             ),
           ]),
@@ -369,7 +363,9 @@ class _QuestWidget extends State<QuestWidget> {
 }
 
 class PrerequisitiesItem extends StatelessWidget {
-  const PrerequisitiesItem({Key? key}) : super(key: key);
+  PrerequisitiesItem({required this.image});
+
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -390,7 +386,7 @@ class PrerequisitiesItem extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Text('x 422',
+            child: Text('${this.image}',
                 style: TextStyle(color: Colors.white, fontSize: 10),
                 textAlign: TextAlign.center),
           ),
@@ -404,7 +400,9 @@ class PrerequisitiesItem extends StatelessWidget {
 }
 
 class Prerequisities extends StatelessWidget {
-  const Prerequisities({Key? key}) : super(key: key);
+  Prerequisities({required this.requirements});
+
+  final QuestRequirements requirements;
 
   @override
   Widget build(BuildContext context) {
@@ -419,11 +417,8 @@ class Prerequisities extends StatelessWidget {
             spacing: 5.0,
             alignment: WrapAlignment.start,
             children: [
-              PrerequisitiesItem(),
-              PrerequisitiesItem(),
-              PrerequisitiesItem(),
-              PrerequisitiesItem(),
-              PrerequisitiesItem(),
+              for (var item in requirements.items)
+                PrerequisitiesItem(image: item.title),
             ])
       ]),
     );
