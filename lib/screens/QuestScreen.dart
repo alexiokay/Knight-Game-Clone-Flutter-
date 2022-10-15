@@ -6,11 +6,9 @@ import 'package:myfirstapp/game_objects/MapLocation.dart';
 
 import 'package:flutter/material.dart';
 
-var item1 =
-    Item(title: 'Antimatter Bow', asset: 'lib/icons/duel.png', type: 'bow');
-var item2 = Item(title: 'Uriziel', asset: 'lib/icons/duel.png', type: 'sword');
-var item3 =
-    Item(title: 'Wood shield', asset: 'lib/icons/duel.png', type: 'shield');
+var item1 = Item(title: 'Antim', asset: 'assets/icons/duel.png', type: 'bow');
+var item2 = Item(title: 'Ur', asset: 'assets/icons/duel.png', type: 'sword');
+var item3 = Item(title: 'Wood', asset: 'assets/icons/duel.png', type: 'shield');
 
 var items = [item1, item2];
 var items2 = [item2, item3];
@@ -84,8 +82,8 @@ class _ScreenQuest extends State<ScreenQuest> {
             Stack(children: [
               Container(
                   width: double.infinity,
-                  child: Image.asset('lib/icons/map.jpg', fit: BoxFit.fill)),
-              Expanded(
+                  child: Image.asset('assets/icons/map.jpg', fit: BoxFit.fill)),
+              Container(
                 child: Column(children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 120),
@@ -102,7 +100,7 @@ class _ScreenQuest extends State<ScreenQuest> {
                         height: 32,
                         width: double.infinity,
                         color: Color.fromARGB(255, 35, 20, 7),
-                        child: Image.asset('lib/icons/duel.png', width: 20),
+                        child: Image.asset('assets/icons/duel.png', width: 20),
                       ),
                       onTap: () {
                         setState(() => {
@@ -164,7 +162,7 @@ class _ScreenQuest extends State<ScreenQuest> {
                         ),
                         Container(
                           height: 10,
-                          child: Image.asset('lib/icons/duel.png'),
+                          child: Image.asset('assets/icons/duel.png'),
                         ),
                         Container(height: 60),
                         Align(
@@ -248,31 +246,33 @@ class _QuestWidget extends State<QuestWidget> {
                   height: 60,
                   color: Colors.blue,
                   child: Column(children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${widget.title}',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text('${widget.progress} %',
-                                textAlign: TextAlign.end,
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            left: 8, right: 8, top: 5, bottom: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${widget.title}',
+                                textAlign: TextAlign.start,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
                                 )),
-                          ),
-                        ],
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text('${widget.progress} %',
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                  )),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Align(
@@ -303,21 +303,24 @@ class _QuestWidget extends State<QuestWidget> {
                                   Row(children: [
                                     SizedBox(
                                       height: 30,
-                                      child: Image.asset('lib/icons/duel.png'),
+                                      child:
+                                          Image.asset('assets/icons/duel.png'),
                                     ),
                                     Text('${widget.reward}')
                                   ]),
                                   Row(children: [
                                     SizedBox(
                                       height: 30,
-                                      child: Image.asset('lib/icons/duel.png'),
+                                      child:
+                                          Image.asset('assets/icons/duel.png'),
                                     ),
                                     Text('Experience ${widget.experience}')
                                   ]),
                                   Row(children: [
                                     SizedBox(
                                       height: 30,
-                                      child: Image.asset('lib/icons/duel.png'),
+                                      child:
+                                          Image.asset('assets/icons/duel.png'),
                                     ),
                                     Text('Chance of loot: ${widget.loot}')
                                   ]),
@@ -344,7 +347,7 @@ class _QuestWidget extends State<QuestWidget> {
                                 child: Row(children: [
                                   SizedBox(
                                     height: 30,
-                                    child: Image.asset('lib/icons/duel.png'),
+                                    child: Image.asset('assets/icons/duel.png'),
                                   ),
                                   Text('${widget.cost}')
                                 ])),
@@ -363,9 +366,9 @@ class _QuestWidget extends State<QuestWidget> {
 }
 
 class PrerequisitiesItem extends StatelessWidget {
-  PrerequisitiesItem({required this.image});
+  PrerequisitiesItem({required this.title});
 
-  final String image;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -379,14 +382,14 @@ class PrerequisitiesItem extends StatelessWidget {
             height: 35,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/icons/header.jpg'),
+                image: AssetImage('assets/icons/header.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Text('${this.image}',
+            child: Text('${this.title}',
                 style: TextStyle(color: Colors.white, fontSize: 10),
                 textAlign: TextAlign.center),
           ),
@@ -418,7 +421,7 @@ class Prerequisities extends StatelessWidget {
             alignment: WrapAlignment.start,
             children: [
               for (var item in requirements.items)
-                PrerequisitiesItem(image: item.title),
+                PrerequisitiesItem(title: item.title),
             ])
       ]),
     );

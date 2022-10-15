@@ -1,50 +1,15 @@
 // main.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:myfirstapp/game_objects/Player.dart';
+import 'package:myfirstapp/game_objects/Countries.dart';
+import 'package:provider/provider.dart';
+import 'package:myfirstapp/providers/player_provider.dart';
 
 import 'screens/HomeScreen.dart.dart';
 import 'screens/QuestScreen.dart';
 import 'screens/DuelScreen.dart';
 import 'screens/EquipmentScreen.dart';
 import 'screens/MoreScreen.dart';
-
-class Player {
-  String username;
-  int level;
-  int rubbles;
-  double silver;
-  int power;
-  int strength;
-  int health;
-  int experience;
-
-  Player({
-    required this.username,
-    required this.level,
-    required this.rubbles,
-    required this.silver,
-    required this.power,
-    required this.strength,
-    required this.health,
-    required this.experience,
-  });
-}
-
-login() {
-  final player = Player(
-      username: 'player#22323',
-      level: 1,
-      rubbles: 10,
-      silver: 29.000,
-      power: 5,
-      strength: 35,
-      health: 100,
-      experience: 1);
-
-  return (player);
-}
-
-final player = login();
 
 Future<void> main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -59,11 +24,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      // Hide the debug banner
-      debugShowCheckedModeBanner: false,
-      title: 'Kindacode.com',
-      home: MyHomePage(),
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => PlayerProvider())],
+      child: MaterialApp(
+        // Hide the debug banner
+        debugShowCheckedModeBanner: false,
+        title: 'Kindacode.com',
+        home: MyHomePage(),
+      ),
     );
   }
 }
@@ -94,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("lib/icons/header.jpg"),
+                image: AssetImage("assets/icons/header.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -108,9 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      playerAttribute('Level', player.level),
-                      playerAttribute('Rubbles', player.rubbles),
-                      playerAttribute('Silver', player.silver),
+                      playerAttribute(
+                        title: '1:32',
+                        amount: Provider.of<PlayerProvider>(context).level,
+                      ),
+                      playerAttribute(
+                        title: '1:32',
+                        amount: Provider.of<PlayerProvider>(context).rubbles,
+                      ),
+                      playerAttribute(
+                          title: '1:32',
+                          amount: Provider.of<PlayerProvider>(context).silver),
                     ],
                   ),
                 ),
@@ -150,9 +126,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      playerAttribute('1:32', player.power), // TODO: add timers
-                      playerAttribute('1:32', player.strength),
-                      playerAttribute('1:32', player.health),
+                      playerAttribute(
+                          title: '1:32',
+                          amount: Provider.of<PlayerProvider>(context).courage,
+                          amount2: Provider.of<PlayerProvider>(context)
+                              .maxCourage), // TODO: add timers
+                      playerAttribute(
+                          title: '1:32',
+                          amount: Provider.of<PlayerProvider>(context).strength,
+                          amount2:
+                              Provider.of<PlayerProvider>(context).maxStrength),
+                      playerAttribute(
+                          title: '1:32',
+                          amount:
+                              Provider.of<PlayerProvider>(context).hitpoints,
+                          amount2: Provider.of<PlayerProvider>(context)
+                              .maxHitpoints),
                     ],
                   ),
                 ),
@@ -162,11 +151,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: _screens[_selectedScreenIndex]["screen"],
         bottomNavigationBar: Row(children: <Widget>[
-          buildNavBarItem('Home', 'lib/icons/duel.png', 0),
-          buildNavBarItem('Quest', 'lib/icons/quest.png', 1),
-          buildNavBarItem('Duel', 'lib/icons/duel.png', 2),
-          buildNavBarItem('Equipment', 'lib/icons/equipment.png', 3),
-          buildNavBarItem('More..', 'lib/icons/duel.png', 4),
+          buildNavBarItem('Home', 'assets/icons/duel.png', 0),
+          buildNavBarItem('Quest', 'assets/icons/quest.png', 1),
+          buildNavBarItem('Duel', 'assets/icons/duel.png', 2),
+          buildNavBarItem('Equipment', 'assets/icons/equipment.png', 3),
+          buildNavBarItem('More..', 'assets/icons/duel.png', 4),
         ]));
   }
 
@@ -211,42 +200,62 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Widget playerAttribute(String title, amount) {
-  return Flexible(
-      flex: 1,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'lib/icons/duel.png',
-                      width: 50,
-                    )
-                  ]),
-            ),
-            Flexible(
-              child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  //crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Row(children: [
-                      Text('$amount',
-                          style: TextStyle(
-                            color: Colors.yellow[600],
-                            fontWeight: FontWeight.bold,
-                          ))
+class playerAttribute extends StatelessWidget {
+  final String title;
+  var amount;
+  var amount2;
+
+  playerAttribute({
+    Key? key,
+    required this.title, // non-nullable and required
+    required this.amount, // non-nullable but optional with a default value
+    this.amount2, // nullable and optional
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+        flex: 1,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/icons/duel.png',
+                        width: 50,
+                      )
                     ]),
-                    Row(children: [
-                      Text(title,
-                          style: TextStyle(fontSize: 10, color: Colors.white))
+              ),
+              Flexible(
+                child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Row(children: [
+                        Text('${amount}',
+                            style: TextStyle(
+                              color: Colors.yellow[600],
+                              fontWeight: FontWeight.bold,
+                            )),
+                        if (amount2 != null)
+                          Text('/${amount2}',
+                              style: TextStyle(
+                                color: Colors.yellow[600],
+                                fontWeight: FontWeight.bold,
+                              ))
+                      ]),
+                      Row(children: [
+                        Text(title,
+                            style: TextStyle(fontSize: 10, color: Colors.white))
+                      ]),
                     ]),
-                  ]),
-            ),
-          ]));
+              ),
+            ]));
+  }
 }

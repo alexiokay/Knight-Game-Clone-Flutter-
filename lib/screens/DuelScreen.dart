@@ -1,5 +1,8 @@
 // screen_b.dart
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/game_objects/Player.dart';
+import 'package:provider/provider.dart';
+import 'package:myfirstapp/providers/player_provider.dart';
 
 class ScreenDuel extends StatefulWidget {
   const ScreenDuel({
@@ -83,14 +86,14 @@ class _ScreenDuel extends State<ScreenDuel> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       width: double.infinity,
-      height: 50,
+      height: 70,
       child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Expanded(
                 flex: 1,
-                child: Image.asset('lib/icons/duel.png'),
+                child: Image.asset('assets/icons/duel.png', width: 90),
               ),
               Column(
                   mainAxisSize: MainAxisSize.max,
@@ -137,12 +140,15 @@ class _ScreenDuel extends State<ScreenDuel> {
                           MaterialStateProperty.all<Color>(Colors.blue),
                     ),
                     onPressed: () {
+                      context.read<PlayerProvider>().fight();
                       setState(() {
                         _isDuelFinished = true;
+                        player.level++;
                       });
+                      print(player.maxCourage);
                     },
                     child: Row(children: [
-                      Image.asset('lib/icons/duel.png'),
+                      Image.asset('assets/icons/duel.png', width: 30),
                       Text('Attack', style: TextStyle(color: Colors.white)),
                     ])),
                 //button
