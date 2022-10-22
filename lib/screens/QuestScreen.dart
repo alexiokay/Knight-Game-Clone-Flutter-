@@ -3,6 +3,12 @@
 import 'package:myfirstapp/game_objects/Quests.dart';
 import 'package:myfirstapp/game_objects/Items.dart';
 import 'package:myfirstapp/game_objects/MapLocation.dart';
+import 'package:get/get.dart';
+
+import 'package:myfirstapp/game_objects/Player.dart';
+import 'package:provider/provider.dart';
+import 'package:myfirstapp/providers/old_player_provider.dart';
+import 'package:myfirstapp/providers/player_controller.dart';
 
 import 'package:flutter/material.dart';
 
@@ -205,7 +211,7 @@ class QuestWidget extends StatefulWidget {
   final double? reward;
   final int? experience;
   final bool? loot;
-  final int? cost;
+  final int cost;
   final int? progress;
   final QuestRequirements requirements;
 
@@ -215,7 +221,7 @@ class QuestWidget extends StatefulWidget {
     this.reward,
     this.experience,
     this.loot,
-    this.cost,
+    this.cost = 0,
     this.progress,
     required this.requirements,
   }) : super(key: key);
@@ -235,6 +241,7 @@ class _QuestWidget extends State<QuestWidget> {
 
   @override
   Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
     return Container(
       color: Colors.white,
       child: Column(
@@ -343,13 +350,15 @@ class _QuestWidget extends State<QuestWidget> {
                                       MaterialStateProperty.all<Color>(
                                           Colors.blue),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  playerControler.makeQuest(widget.cost);
+                                },
                                 child: Row(children: [
                                   SizedBox(
                                     height: 30,
                                     child: Image.asset('assets/icons/duel.png'),
                                   ),
-                                  Text('${widget.cost}')
+                                  Text('${widget.cost}'),
                                 ])),
                             //button
                           ]),

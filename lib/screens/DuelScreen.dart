@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfirstapp/game_objects/Player.dart';
 import 'package:provider/provider.dart';
-import 'package:myfirstapp/providers/player_provider.dart';
+import 'package:myfirstapp/providers/old_player_provider.dart';
 
 class ScreenDuel extends StatefulWidget {
   const ScreenDuel({

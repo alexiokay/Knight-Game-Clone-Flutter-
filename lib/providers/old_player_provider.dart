@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:myfirstapp/game_objects/Items.dart';
 
 class PlayerProvider with ChangeNotifier {
-  int _maxCourage = 5;
+  int _maxCourage = 50;
   int _courage = 5;
   int _level = 1;
   int _avalibleAttributePoints = 0;
@@ -36,5 +37,35 @@ class PlayerProvider with ChangeNotifier {
     _level++;
     _avalibleAttributePoints + 3;
     notifyListeners();
+  }
+
+  // Setters
+
+  // make quest
+  void makeQuestCourage(int courageCost) {
+    if ((_courage - courageCost <= 0) == false) {
+      _courage = _courage - courageCost;
+      notifyListeners();
+    }
+
+    // add if wq quest is percent less 9
+  }
+
+  void duelCourage(int newStrength, String enemy) {
+    // or name of enemy
+    if ((_courage - newStrength <= 0) == false) {
+      _courage = _courage - newStrength;
+      notifyListeners();
+    }
+  }
+
+// buy something
+  void buySomething(int cost, Item items) {
+    if ((_rubbles < cost) == false) {
+      _rubbles = _rubbles - cost; // pay with rubbles
+      // check if items exists in list of items and add add it to user's inventory
+
+      notifyListeners();
+    }
   }
 }

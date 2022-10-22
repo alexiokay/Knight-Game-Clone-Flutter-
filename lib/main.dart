@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:myfirstapp/game_objects/Player.dart';
 import 'package:myfirstapp/game_objects/Countries.dart';
 import 'package:provider/provider.dart';
-import 'package:myfirstapp/providers/player_provider.dart';
+import 'package:myfirstapp/providers/old_player_provider.dart';
+import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:myfirstapp/providers/timer_counter.dart';
 
+import 'package:get/get.dart';
 import 'screens/HomeScreen.dart.dart';
 import 'screens/QuestScreen.dart';
 import 'screens/DuelScreen.dart';
@@ -55,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -71,22 +75,26 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Flexible(
-                  flex: 2,
+                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       playerAttribute(
                         title: '1:32',
-                        amount: Provider.of<PlayerProvider>(context).level,
+                        amount: playerControler.rubbles,
+                        direction: 'left',
                       ),
                       playerAttribute(
                         title: '1:32',
-                        amount: Provider.of<PlayerProvider>(context).rubbles,
+                        amount: playerControler.rubbles,
+                        direction: 'left',
                       ),
                       playerAttribute(
-                          title: '1:32',
-                          amount: Provider.of<PlayerProvider>(context).silver),
+                        title: '1:32',
+                        amount: playerControler.rubbles,
+                        direction: 'left',
+                      ),
                     ],
                   ),
                 ),
@@ -122,26 +130,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Flexible(
-                  flex: 2,
+                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       playerAttribute(
-                          title: '1:32',
-                          amount: Provider.of<PlayerProvider>(context).courage,
-                          amount2: Provider.of<PlayerProvider>(context)
-                              .maxCourage), // TODO: add timers
+                        title: '1:32',
+                        amount: playerControler.courage,
+                        amount2: playerControler.maxCourage,
+                        controllerType: 'courage',
+                        direction: 'right',
+                      ),
+
+                      // TODO: add timers
                       playerAttribute(
-                          title: '1:32',
-                          amount: Provider.of<PlayerProvider>(context).strength,
-                          amount2:
-                              Provider.of<PlayerProvider>(context).maxStrength),
+                        title: '1:32',
+                        amount: playerControler.strength,
+                        amount2: playerControler.maxStrength,
+                        controllerType: 'strength',
+                        direction: 'right',
+                      ),
+
                       playerAttribute(
-                          title: '1:32',
-                          amount:
-                              Provider.of<PlayerProvider>(context).hitpoints,
-                          amount2: Provider.of<PlayerProvider>(context)
-                              .maxHitpoints),
+                        title: '1:32',
+                        amount: playerControler.hitpoints,
+                        amount2: playerControler.maxHitpoints,
+                        controllerType: 'health',
+                        direction: 'right',
+                      ),
                     ],
                   ),
                 ),
@@ -200,24 +216,40 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class playerAttribute extends StatelessWidget {
+class playerAttribute extends GetView {
   final String title;
   var amount;
   var amount2;
+  var controllerType;
+  var direction;
 
   playerAttribute({
     Key? key,
     required this.title, // non-nullable and required
     required this.amount, // non-nullable but optional with a default value
-    this.amount2, // nullable and optional
+    this.amount2,
+    this.controllerType,
+    required this.direction, // nullable and optional
   });
 
   @override
   Widget build(BuildContext context) {
+    var controller = null;
+    if (controllerType == 'strength')
+      controller = Get.put(TimerStrengthController());
+    else if (controllerType == 'courage')
+      controller = Get.put(TimerCourageController());
+    else if (controllerType == 'health')
+      controller = Get.put(TimerHealthController());
+    else if (controllerType == 'taxes')
+      controller = Get.put(TimerTaxesController());
+    PlayerController playerControler = Get.put(PlayerController());
     return Flexible(
-        flex: 1,
+        flex: 3,
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: direction == 'left'
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(
@@ -225,37 +257,76 @@ class playerAttribute extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset(
-                        'assets/icons/duel.png',
-                        width: 50,
-                      )
+                      if (direction == 'left')
+                        Image.asset(
+                          'assets/icons/duel.png',
+                          width: 34,
+                        )
                     ]),
               ),
               Flexible(
+                flex: 3,
                 child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     mainAxisAlignment: MainAxisAlignment.center,
                     //crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(children: [
-                        Text('${amount}',
-                            style: TextStyle(
-                              color: Colors.yellow[600],
-                              fontWeight: FontWeight.bold,
-                            )),
-                        if (amount2 != null)
-                          Text('/${amount2}',
-                              style: TextStyle(
-                                color: Colors.yellow[600],
-                                fontWeight: FontWeight.bold,
-                              ))
-                      ]),
-                      Row(children: [
-                        Text(title,
-                            style: TextStyle(fontSize: 10, color: Colors.white))
-                      ]),
+                      Row(
+                          mainAxisAlignment: direction == 'left'
+                              ? MainAxisAlignment.start
+                              : MainAxisAlignment.end,
+                          children: [
+                            Obx(() => Text('${amount.value}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ))),
+                            if (amount2 != null)
+                              Text('/${amount2}',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 79, 79, 79),
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                          ]),
+                      Obx(
+                        () => Row(
+                            mainAxisAlignment: direction == 'left'
+                                ? MainAxisAlignment.start
+                                : MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Visibility(
+                                  visible: false,
+                                  child: Text('${playerControler.strength}')),
+                              if ((controllerType == 'player') == false &&
+                                  controller != null &&
+                                  amount != amount2)
+                                Text('${controller.time.value}',
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.white)),
+                              if (controller == null ||
+                                  amount ==
+                                      amount2) // if amount is full or widget has no controllerType then show type
+                                Text('type',
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.white)),
+                            ]),
+                      )
                     ]),
               ),
+              if (direction == 'right')
+                Flexible(
+                  flex: 2,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/icons/duel.png',
+                          width: 34,
+                        )
+                      ]),
+                ),
             ]));
   }
 }
