@@ -31,6 +31,25 @@ class PlayerController extends GetxController {
   var strength = 43.obs;
   var hitpoints = 22.obs;
   var isItemInInventory = false.obs;
+
+  List<String> guildInvitations = [
+    'Bractwo 1',
+    'Bractwo 2',
+    'Bractwo 3',
+    'Bractwo 4',
+  ].obs;
+
+  RxList inventory = [
+    {
+      'item': Item(title: 'Antim', asset: 'assets/icons/duel.png', type: 'bow'),
+      'amount': 2
+    }.obs,
+    {
+      'item': Item(title: 'Ur', asset: 'assets/icons/duel.png', type: 'sword'),
+      'amount': 1
+    }.obs
+  ].obs;
+
   bool checkInventoryElement(item_name, intention, amount) {
     if (intention == 'buy') {
       return true;
@@ -44,22 +63,9 @@ class PlayerController extends GetxController {
     }
   }
 
-  List inventory = [
-    {
-      'item': Item(title: 'Antim', asset: 'assets/icons/duel.png', type: 'bow'),
-      'amount': 2
-    },
-    {
-      'item': Item(title: 'Ur', asset: 'assets/icons/duel.png', type: 'sword'),
-      'amount': 1
-    }
-  ].obs;
-
-  var weaponCount = 0.obs;
-  countWeapons() => {
-        weaponCount.value = 0,
-        for (var weapon in inventory) weaponCount += weapon['amount']
-      };
+  String get getinv {
+    return this.inventory[0]['amount'].toString();
+  }
 
   duel(cost) => {
         if (courage.value == maxCourage.value) courageTimerController.onReady(),
@@ -101,7 +107,8 @@ class PlayerController extends GetxController {
             })
           },
         print(inventory.length),
-        for (var item in inventory) {print(item)}
+        for (var item in inventory) {print(item)},
+        inventory.refresh()
       };
 
   inventoryCheck(item_name) => {
@@ -140,6 +147,7 @@ class PlayerController extends GetxController {
         else
           {print('doesnt work')},
         print('how mnay items?: ${inventory.length}'),
-        for (var item in inventory) {print(item)}
+        for (var item in inventory) {print(item)},
+        inventory.refresh()
       };
 }

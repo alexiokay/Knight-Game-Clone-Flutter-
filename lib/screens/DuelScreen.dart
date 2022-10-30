@@ -53,10 +53,11 @@ class _ScreenDuel extends State<ScreenDuel> {
               child: DuelResultWidget(isDuelWon: false),
             ),
             Row(children: [
-              Text('Przeciwnik'),
+              Text('Przeciwnik', style: TextStyle(color: Colors.white)),
               Container(
                 margin: EdgeInsets.only(left: 70),
-                child: Text('Wielkosc bractwa'),
+                child: Text('Wielkosc bractwa',
+                    style: TextStyle(color: Colors.white)),
               )
             ]),
             ListView(
@@ -77,14 +78,16 @@ class _ScreenDuel extends State<ScreenDuel> {
   ) {
     return Container(
       margin: EdgeInsets.only(top: 2),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 212, 156, 156),
-        border: Border.all(
-          color: Colors.white,
-          width: 1,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color.fromARGB(255, 68, 44, 44),
+          Color.fromARGB(255, 99, 26, 26),
+          Color.fromARGB(255, 71, 16, 16),
+        ],
+      )),
       width: double.infinity,
       height: 70,
       child: Padding(

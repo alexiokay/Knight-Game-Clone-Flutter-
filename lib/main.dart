@@ -30,6 +30,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PlayerProvider())],
       child: MaterialApp(
+        color: Color.fromARGB(255, 160, 44, 36),
+        theme: new ThemeData(
+          scaffoldBackgroundColor: const Color.fromARGB(255, 160, 44, 36),
+          fontFamily: 'Georgia',
+        ),
+
         // Hide the debug banner
         debugShowCheckedModeBanner: false,
         title: 'Kindacode.com',
@@ -60,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     PlayerController playerControler = Get.put(PlayerController());
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 35, 20, 7),
         appBar: AppBar(
           toolbarHeight: 140, // Set this height
           flexibleSpace: Container(
@@ -197,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: index == _selectedScreenIndex
                   ? TextStyle(color: Colors.blue, fontWeight: FontWeight.normal)
                   : TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.normal))
+                      color: Colors.white, fontWeight: FontWeight.normal))
         ]),
         height: 60,
         width: MediaQuery.of(context).size.width / 5,
@@ -207,10 +213,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   bottom: BorderSide(width: 4, color: Colors.black),
                 ),
                 gradient: LinearGradient(colors: [
-                  Colors.green.withOpacity(0.3),
+                  Color.fromARGB(255, 238, 238, 238).withOpacity(0.3),
                   Colors.blue.withOpacity(0.015),
                 ], begin: Alignment.bottomCenter, end: Alignment.topCenter))
-            : const BoxDecoration(),
+            : const BoxDecoration(
+                gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 117, 117, 117),
+                  Color.fromARGB(255, 26, 26, 26),
+                  Colors.black,
+                ],
+              )),
       ),
     );
   }

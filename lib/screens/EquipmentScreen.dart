@@ -55,7 +55,6 @@ class _ScreenEquipment extends State<ScreenEquipment> {
                               cost: 4,
                               progress: 2,
                             ),
-                            SizedBox(height: 50),
                           ],
                         )
                     ],
@@ -104,15 +103,25 @@ class _EquipmentWidget extends State<EquipmentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Color.fromARGB(255, 35, 20, 7), // Widget background
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               child: Container(
+                  margin: EdgeInsets.only(top: 20),
                   height: 50,
-                  color: Colors.blue,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.center,
+                      colors: [
+                        Color.fromARGB(255, 169, 216, 250),
+                        Colors.blue,
+                      ],
+                    ),
+                  ),
                   child: Column(children: [
                     Expanded(
                       child: Container(
@@ -139,7 +148,10 @@ class _EquipmentWidget extends State<EquipmentWidget> {
                   ])),
             ),
             CenterWidget(),
-            FooterWidget(itemPrice: widget.cost, itemTitle: widget.title),
+            FooterWidget(
+              itemPrice: widget.cost,
+              itemTitle: widget.title,
+            ),
           ]),
     );
   }
@@ -234,8 +246,18 @@ class Armament extends StatelessWidget {
   }
 }
 
-class CenterWidget extends StatelessWidget {
-  CenterWidget();
+class CenterWidget extends StatefulWidget {
+  final itemPrice;
+  final itemTitle;
+
+  const CenterWidget({super.key, this.itemPrice, this.itemTitle});
+
+  @override
+  State<CenterWidget> createState() => _CenterWidget();
+}
+
+class _CenterWidget extends State<CenterWidget> {
+  _CenterWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +265,7 @@ class CenterWidget extends StatelessWidget {
     return Container(
         width: double.infinity,
         height: 200,
-        color: Colors.red,
+        color: Color.fromARGB(255, 160, 44, 36),
         child: Padding(
             padding: EdgeInsets.all(10),
             child: Row(children: [
@@ -276,7 +298,8 @@ class CenterWidget extends StatelessWidget {
                                       height: 30,
                                       fit: BoxFit.cover,
                                     ),
-                                    Text('Atak: 0'),
+                                    Text('Atak: 0',
+                                        style: TextStyle(color: Colors.white)),
                                   ]),
                                   Row(children: [
                                     Image.asset(
@@ -285,7 +308,10 @@ class CenterWidget extends StatelessWidget {
                                       height: 30,
                                       fit: BoxFit.cover,
                                     ),
-                                    Text('Obrona: 9'),
+                                    Text(
+                                      'Obrona: 9',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ]),
                                 ])),
                             Flexible(
@@ -293,7 +319,8 @@ class CenterWidget extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.bottomRight,
                                 child: Obx(() => Text(
-                                      'Posiadasz: ${playerControler.weaponCount}',
+                                      style: TextStyle(color: Colors.white),
+                                      'Posiadasz: ${playerControler.inventory.where((element) => element['item'].title == 'Antim').first["amount"]}',
                                     )),
                               ),
                             )
@@ -305,6 +332,7 @@ class CenterWidget extends StatelessWidget {
 class FooterWidget extends StatefulWidget {
   final itemPrice;
   final itemTitle;
+
   const FooterWidget({super.key, this.itemPrice, this.itemTitle});
 
   @override
@@ -335,7 +363,7 @@ class _FooterWidget extends State<FooterWidget> {
     return Container(
         width: double.infinity,
         height: 110,
-        color: Color.fromARGB(255, 231, 34, 20),
+        color: Color.fromARGB(255, 162, 11, 0),
         child: Padding(
           padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: Column(
@@ -374,7 +402,6 @@ class _FooterWidget extends State<FooterWidget> {
                         setState(() {
                           _value = value;
                           _controller.text = value.toInt().toString();
-                          playerControler.countWeapons();
                         });
                       },
                     ),
@@ -445,14 +472,18 @@ class ItemFooterButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buttonType == 'buy' ? Text('Buy') : Text('Sell'),
+                    buttonType == 'buy'
+                        ? Text('Buy', style: TextStyle(color: Colors.white))
+                        : Text('Sell', style: TextStyle(color: Colors.white)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset('assets/icons/duel.png',
                             width: 20, height: 20),
-                        Text('${finalPrice()}')
+                        Text(
+                            style: TextStyle(color: Colors.white),
+                            '${finalPrice()}')
                       ],
                     )
                   ])),
@@ -460,11 +491,9 @@ class ItemFooterButton extends StatelessWidget {
             if (buttonType == 'buy') {
               playerControler.buyItem(itemTitle, amount);
               setParentState('abc');
-              playerControler.countWeapons();
             } else {
               playerControler.sellItem(itemTitle, amount);
               setParentState('abc');
-              playerControler.countWeapons();
             }
           },
         ));
