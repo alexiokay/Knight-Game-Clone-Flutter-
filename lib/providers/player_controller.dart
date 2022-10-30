@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfirstapp/game_objects/Items.dart';
 import 'package:myfirstapp/game_objects/Countries.dart';
 import 'package:myfirstapp/providers/timer_counter.dart';
+import 'package:myfirstapp/game_objects/Items.dart';
 
 import 'dart:async';
 
@@ -23,11 +24,42 @@ class PlayerController extends GetxController {
   var attack = 220.obs;
   var defense = 190.obs;
   var maxCourage = 50.obs;
+
   var maxStrength = 44.obs;
   var maxHitpoints = 100.obs;
   var courage = 22.obs;
   var strength = 43.obs;
   var hitpoints = 22.obs;
+  var isItemInInventory = false.obs;
+  bool checkInventoryElement(item_name, intention, amount) {
+    if (intention == 'buy') {
+      return true;
+    } else if (inventory
+            .where((element) => element['item'].title == item_name)
+            .first['amount'] >
+        amount - 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List inventory = [
+    {
+      'item': Item(title: 'Antim', asset: 'assets/icons/duel.png', type: 'bow'),
+      'amount': 2
+    },
+    {
+      'item': Item(title: 'Ur', asset: 'assets/icons/duel.png', type: 'sword'),
+      'amount': 1
+    }
+  ].obs;
+
+  var weaponCount = 0.obs;
+  countWeapons() => {
+        weaponCount.value = 0,
+        for (var weapon in inventory) weaponCount += weapon['amount']
+      };
 
   duel(cost) => {
         if (courage.value == maxCourage.value) courageTimerController.onReady(),
@@ -48,4 +80,66 @@ class PlayerController extends GetxController {
       {if (hitpoints.value < maxHitpoints.value) hitpoints.value++};
   incrementExperience() =>
       {if (experience.value < experience.value) experience++};
+
+  buyItem(item_name, count) => {
+        if (inventory.where((element) => element['item'].title == item_name) !=
+            null)
+          {
+            inventory
+                .where((element) => element['item'].title == item_name)
+                .first['amount'] += count.toInt(),
+            print('count added to first element')
+          }
+        else
+          {
+            inventory.add({
+              'item': new Item(
+                  title: item_name,
+                  asset: 'assets/icons/duel.png',
+                  type: 'bow'),
+              'amount': count.round()
+            })
+          },
+        print(inventory.length),
+        for (var item in inventory) {print(item)}
+      };
+
+  inventoryCheck(item_name) => {
+        if (inventory
+                .where((element) => element['item'].title == item_name)
+                .first['amount'] !=
+            0)
+          {
+            isItemInInventory.value = true,
+          }
+        else
+          {
+            isItemInInventory.value = false,
+          }
+      };
+  sellItem(item_name, count) => {
+        if (inventory.where((element) => element['item'].title == item_name) !=
+            null)
+          {
+            if (inventory
+                    .where((element) => element['item'].title == item_name)
+                    .first['amount'] <
+                count.toInt())
+              {
+                inventory
+                    .where((element) => element['item'].title == item_name)
+                    .first['amount'] = 0
+              }
+            else
+              {
+                inventory
+                    .where((element) => element['item'].title == item_name)
+                    .first['amount'] -= count.toInt()
+              }
+          }
+        else
+          {print('doesnt work')},
+        print('how mnay items?: ${inventory.length}'),
+        for (var item in inventory) {print(item)}
+      };
 }

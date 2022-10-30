@@ -84,6 +84,7 @@ class TimerCourageController extends GetxController {
         timer.cancel();
 
         player2.incrementCourage();
+        _startTimer(300);
       } else {
         int minutes = remainingSeconds ~/ 60;
         int seconds = (remainingSeconds % 60);
@@ -129,6 +130,7 @@ class TimerHealthController extends GetxController {
       if (remainingSeconds == 0) {
         timer.cancel();
         player2.incrmentHealth();
+        _startTimer(300);
       } else {
         int minutes = remainingSeconds ~/ 60;
         int seconds = (remainingSeconds % 60);
@@ -174,6 +176,7 @@ class TimerTaxesController extends GetxController {
       if (remainingSeconds == 0) {
         timer.cancel();
         player2.collectTaxes();
+        _startTimer(300);
       } else {
         int minutes = remainingSeconds ~/ 60;
         int seconds = (remainingSeconds % 60);

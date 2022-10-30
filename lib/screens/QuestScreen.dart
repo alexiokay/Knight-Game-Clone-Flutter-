@@ -241,7 +241,6 @@ class _QuestWidget extends State<QuestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    PlayerController playerControler = Get.put(PlayerController());
     return Container(
       color: Colors.white,
       child: Column(
@@ -293,82 +292,15 @@ class _QuestWidget extends State<QuestWidget> {
                         ))
                   ])),
             ),
-            Container(
-              child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                  //crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(children: [
-                                    SizedBox(
-                                      height: 30,
-                                      child:
-                                          Image.asset('assets/icons/duel.png'),
-                                    ),
-                                    Text('${widget.reward}')
-                                  ]),
-                                  Row(children: [
-                                    SizedBox(
-                                      height: 30,
-                                      child:
-                                          Image.asset('assets/icons/duel.png'),
-                                    ),
-                                    Text('Experience ${widget.experience}')
-                                  ]),
-                                  Row(children: [
-                                    SizedBox(
-                                      height: 30,
-                                      child:
-                                          Image.asset('assets/icons/duel.png'),
-                                    ),
-                                    Text('Chance of loot: ${widget.loot}')
-                                  ]),
-                                  Row(children: [
-                                    InkWell(
-                                        child: Text(' + Prerequisities: ( )'),
-                                        onTap: () {
-                                          setState(() {
-                                            _isVisible = !_isVisible;
-                                          });
-                                        }),
-
-                                    ///
-                                  ]),
-                                  // Prerequisities toogler
-                                ]),
-                            OutlinedButton(
-                                style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.blue),
-                                ),
-                                onPressed: () {
-                                  playerControler.makeQuest(widget.cost);
-                                },
-                                child: Row(children: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: Image.asset('assets/icons/duel.png'),
-                                  ),
-                                  Text('${widget.cost}'),
-                                ])),
-                            //button
-                          ]),
-                    ),
-                    Visibility(
-                        visible: _isVisible,
-                        child:
-                            Prerequisities(requirements: widget.requirements))
-                  ]),
-            ),
+            QuestContent(
+              reward: widget.reward,
+              experience: widget.experience,
+              loot: widget.loot,
+              cost: widget.cost,
+              requirements: widget.requirements,
+              notifyParent: showToast,
+              isVisible: _isVisible,
+            )
           ]),
     );
   }
@@ -433,6 +365,99 @@ class Prerequisities extends StatelessWidget {
                 PrerequisitiesItem(title: item.title),
             ])
       ]),
+    );
+  }
+}
+
+class QuestContent extends StatelessWidget {
+  QuestContent(
+      {required this.reward,
+      required this.experience,
+      required this.loot,
+      required this.cost,
+      required this.requirements,
+      required this.isVisible,
+      required this.notifyParent});
+
+  final reward;
+  final experience;
+  final loot;
+  final cost;
+  final requirements;
+  bool isVisible;
+  final Function() notifyParent;
+
+  @override
+  Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
+    return Container(
+      child: Column(
+          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            SizedBox(
+                              height: 30,
+                              child: Image.asset('assets/icons/duel.png'),
+                            ),
+                            Text('${reward}')
+                          ]),
+                          Row(children: [
+                            SizedBox(
+                              height: 30,
+                              child: Image.asset('assets/icons/duel.png'),
+                            ),
+                            Text('Experience ${experience}')
+                          ]),
+                          Row(children: [
+                            SizedBox(
+                              height: 30,
+                              child: Image.asset('assets/icons/duel.png'),
+                            ),
+                            Text('Chance of loot: ${loot}')
+                          ]),
+                          Row(children: [
+                            InkWell(
+                                child: Text(' + Prerequisities: ( )'),
+                                onTap: () {
+                                  notifyParent();
+                                }),
+
+                            ///
+                          ]),
+                          // Prerequisities toogler
+                        ]),
+                    OutlinedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                        ),
+                        onPressed: () {
+                          playerControler.makeQuest(cost);
+                        },
+                        child: Row(children: [
+                          SizedBox(
+                            height: 30,
+                            child: Image.asset('assets/icons/duel.png'),
+                          ),
+                          Text('${cost}'),
+                        ])),
+                    //button
+                  ]),
+            ),
+            Visibility(
+                visible: isVisible,
+                child: Prerequisities(requirements: requirements))
+          ]),
     );
   }
 }

@@ -75,23 +75,23 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Flexible(
-                  flex: 4,
+                  flex: 5,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       playerAttribute(
-                        title: '1:32',
+                        title: 'Level',
                         amount: playerControler.rubbles,
                         direction: 'left',
                       ),
                       playerAttribute(
-                        title: '1:32',
+                        title: 'Rubins',
                         amount: playerControler.rubbles,
                         direction: 'left',
                       ),
                       playerAttribute(
-                        title: '1:32',
+                        title: '4.122.033 after 17:34',
                         amount: playerControler.rubbles,
                         direction: 'left',
                       ),
@@ -107,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Flexible(
                         flex: 1,
                         child: Text(
-                          player.username,
+                          _screens[_selectedScreenIndex]["title"],
                           style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.normal),
                           textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Flexible(
-                  flex: 4,
+                  flex: 5,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -307,7 +307,7 @@ class playerAttribute extends GetView {
                               if (controller == null ||
                                   amount ==
                                       amount2) // if amount is full or widget has no controllerType then show type
-                                Text('type',
+                                Text('${title}',
                                     style: TextStyle(
                                         fontSize: 10, color: Colors.white)),
                             ]),
