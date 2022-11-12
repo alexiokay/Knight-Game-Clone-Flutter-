@@ -13,6 +13,7 @@ import 'screens/QuestScreen.dart';
 import 'screens/DuelScreen.dart';
 import 'screens/EquipmentScreen.dart';
 import 'screens/MoreScreen.dart';
+import 'package:myfirstapp/screens/menu_screens/all.dart';
 
 Future<void> main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -54,16 +55,39 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedScreenIndex = 0;
-  final List _screens = [
-    {"screen": const ScreenHome(), "title": "Home"},
-    {"screen": const ScreenQuest(), "title": "Quest"},
-    {"screen": const ScreenDuel(), "title": "Duel"},
-    {"screen": const ScreenEquipment(), "title": "Equipment"},
-    {"screen": const ScreenMore(), "title": "More..."},
-  ];
+
+  changeScreen(screenIndex) {
+    setState(() {
+      _selectedScreenIndex = screenIndex;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List _screens = [
+      {"screen": const ScreenHome(), "title": "Home"},
+      {"screen": const ScreenQuest(), "title": "Quest"},
+      {"screen": const ScreenDuel(), "title": "Duel"},
+      {"screen": const ScreenEquipment(), "title": "Equipment"},
+      {"screen": ScreenMore(changeScreen: changeScreen), "title": "More..."},
+      {"screen": const HeroScreen(), "title": "Hero"},
+      {"screen": const VassalsScreen(), "title": "Vassals"},
+      {"screen": const TreasuryScreen(), "title": "Treasury"},
+      {"screen": const MedicScreen(), "title": "Mdic"},
+      {"screen": const ShopScreen(), "title": "Shop"},
+      {"screen": const LuckyCardsScreen(), "title": "Lucky Cards"},
+      {"screen": const GuildScreen(), "title": "Guild"},
+      {"screen": const FactionsScreen(), "title": "Factions"},
+      {"screen": const HollyMissionsScreen(), "title": "Holly Missions"},
+      {"screen": const RankingsScreen(), "title": "Rankings"},
+      {"screen": const IgnoredScreen(), "title": "Ignored"},
+      {"screen": const SettingsScreen(), "title": "Settings"},
+      {"screen": const LobbyScreen(), "title": "Lobby"},
+      {"screen": const GameRulesScreen(), "title": "Game Rules"},
+      {"screen": const FaqScreen(), "title": "Faq"},
+      {"screen": const OtherGamesScreen(), "title": "Other Games"},
+      {"screen": const PrivacyPolicyScreen(), "title": "Privacy Policy"},
+    ];
     PlayerController playerControler = Get.put(PlayerController());
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 35, 20, 7),
@@ -88,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       playerAttribute(
                         title: 'Level',
-                        amount: playerControler.rubbles,
+                        amount: playerControler.level,
                         direction: 'left',
                       ),
                       playerAttribute(
@@ -98,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       playerAttribute(
                         title: '4.122.033 after 17:34',
-                        amount: playerControler.rubbles,
+                        amount: playerControler.silver,
                         direction: 'left',
                       ),
                     ],
@@ -123,14 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Flexible(
                         flex: 1,
-                        child: Text(
-                          'Experience: ${player.experience}',
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: Obx(() => Text(
+                              'Experience: ${playerControler.experience}',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.normal),
+                              textAlign: TextAlign.center,
+                            )),
                       ),
                     ],
                   ),
@@ -143,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       playerAttribute(
                         title: '1:32',
                         amount: playerControler.courage,
-                        amount2: playerControler.maxCourage,
+                        hitpoints: playerControler.maxCourage,
                         controllerType: 'courage',
                         direction: 'right',
                       ),
@@ -152,15 +176,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       playerAttribute(
                         title: '1:32',
                         amount: playerControler.strength,
-                        amount2: playerControler.maxStrength,
+                        hitpoints: playerControler.maxStrength,
                         controllerType: 'strength',
                         direction: 'right',
                       ),
-
                       playerAttribute(
                         title: '1:32',
                         amount: playerControler.hitpoints,
-                        amount2: playerControler.maxHitpoints,
+                        hitpoints: playerControler.maxHitpoints,
                         controllerType: 'health',
                         direction: 'right',
                       ),
@@ -234,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class playerAttribute extends GetView {
   final String title;
   var amount;
-  var amount2;
+  var hitpoints;
   var controllerType;
   var direction;
 
@@ -242,7 +265,7 @@ class playerAttribute extends GetView {
     Key? key,
     required this.title, // non-nullable and required
     required this.amount, // non-nullable but optional with a default value
-    this.amount2,
+    this.hitpoints,
     this.controllerType,
     required this.direction, // nullable and optional
   });
@@ -296,8 +319,8 @@ class playerAttribute extends GetView {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ))),
-                            if (amount2 != null)
-                              Text('/${amount2}',
+                            if (hitpoints != null)
+                              Text('/${hitpoints}',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 79, 79, 79),
                                     fontWeight: FontWeight.bold,
@@ -315,13 +338,13 @@ class playerAttribute extends GetView {
                                   child: Text('${playerControler.strength}')),
                               if ((controllerType == 'player') == false &&
                                   controller != null &&
-                                  amount != amount2)
+                                  amount != hitpoints)
                                 Text('${controller.time.value}',
                                     style: TextStyle(
                                         fontSize: 10, color: Colors.white)),
                               if (controller == null ||
                                   amount ==
-                                      amount2) // if amount is full or widget has no controllerType then show type
+                                      hitpoints) // if amount is full or widget has no controllerType then show type
                                 Text('${title}',
                                     style: TextStyle(
                                         fontSize: 10, color: Colors.white)),

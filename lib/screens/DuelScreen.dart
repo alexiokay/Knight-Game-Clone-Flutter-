@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myfirstapp/game_objects/Player.dart';
 import 'package:provider/provider.dart';
 import 'package:myfirstapp/providers/old_player_provider.dart';
+import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:get/get.dart';
 
 class ScreenDuel extends StatefulWidget {
   const ScreenDuel({
@@ -16,7 +18,7 @@ class ScreenDuel extends StatefulWidget {
 class _ScreenDuel extends State<ScreenDuel> {
   int opponent = 1;
   final opponentsCounter = 10;
-  var _isDuelFinished = false;
+  var _isDuelFinished = false.obs;
 
   final opponents = <Widget>[];
 
@@ -38,20 +40,26 @@ class _ScreenDuel extends State<ScreenDuel> {
 
   callback(newAbc) {
     setState(() {
-      _isDuelFinished = !_isDuelFinished;
+      _isDuelFinished.value = !_isDuelFinished.value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
     return SingleChildScrollView(
       child: Padding(
           padding: EdgeInsets.only(left: 10, right: 10, top: 10),
           child: Column(children: <Widget>[
-            Visibility(
-              visible: _isDuelFinished,
-              child: DuelResultWidget(isDuelWon: false),
-            ),
+            Obx(() => Visibility(
+                visible: playerControler.hitpoints < 11,
+                child: MedicDoor(callback: callback))),
+            SizedBox(height: 10),
+            Obx(() => Visibility(
+                  visible:
+                      _isDuelFinished.value && playerControler.hitpoints > 10,
+                  child: DuelResultWidget(isDuelWon: false),
+                )),
             Row(children: [
               Text('Przeciwnik', style: TextStyle(color: Colors.white)),
               Container(
@@ -76,6 +84,7 @@ class _ScreenDuel extends State<ScreenDuel> {
     String country,
     int guildMembers,
   ) {
+    PlayerController playerControler = Get.put(PlayerController());
     return Container(
       margin: EdgeInsets.only(top: 2),
       decoration: const BoxDecoration(
@@ -103,10 +112,10 @@ class _ScreenDuel extends State<ScreenDuel> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('test'),
+                    Text('test', style: TextStyle(color: Colors.white)),
                     Row(children: [
-                      Text('flag '),
-                      Text('test'),
+                      Text('flag ', style: TextStyle(color: Colors.white)),
+                      Text('test', style: TextStyle(color: Colors.white)),
                     ])
                   ]),
               Expanded(
@@ -144,11 +153,12 @@ class _ScreenDuel extends State<ScreenDuel> {
                     ),
                     onPressed: () {
                       context.read<PlayerProvider>().fight();
+                      playerControler.Attack == true
+                          ? print('atacked')
+                          : print('couldnt attack');
                       setState(() {
-                        _isDuelFinished = true;
-                        player.level++;
+                        _isDuelFinished.value = true;
                       });
-                      print(player.maxCourage);
                     },
                     child: Row(children: [
                       Image.asset('assets/icons/duel.png', width: 30),
@@ -190,6 +200,7 @@ class DuelResultWidget extends StatefulWidget {
 class _DuelResultWidget extends State<DuelResultWidget> {
   @override
   Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
     return Container(
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 0, 0, 0),
@@ -433,9 +444,9 @@ class _DuelResultWidget extends State<DuelResultWidget> {
                                   MaterialStateProperty.all<Color>(Colors.blue),
                             ),
                             onPressed: () {
-                              setState(() {
-                                //widget.isDuelWon = !widget._isDuelWon;
-                              });
+                              playerControler.Attack == true
+                                  ? print('atacked')
+                                  : print('couldnt attack');
                             },
                             child: Row(children: [Text('jeszcze raz')])),
                         //button
@@ -452,3 +463,189 @@ class _DuelResultWidget extends State<DuelResultWidget> {
   }
 }
 //
+
+class FastMedic extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
+    return Container(
+        margin: EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 0, 0, 0),
+          border: Border.all(
+            color: Color.fromARGB(255, 0, 249, 70),
+            width: 3,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        width: double.infinity,
+        height: 80,
+        child: Padding(
+            padding: EdgeInsetsDirectional.all(4),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Fast Medic',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ),
+                  Text('PREMIUM',
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 254, 242, 27),
+                          fontSize: 15))
+                ],
+              ),
+              OutlinedButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(255, 16, 197, 67)),
+                  ),
+                  onPressed: () {
+                    playerControler.heal();
+                  },
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Text('Heal me now ( 5 mega shards )')])),
+            ])));
+  }
+}
+
+class MedicDoor extends StatelessWidget {
+  final callback;
+  MedicDoor({this.callback});
+  @override
+  Widget build(BuildContext context) {
+    PlayerController playerControler = Get.put(PlayerController());
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 0, 0, 0),
+        border: Border.all(
+          color: Color.fromARGB(255, 0, 255, 51),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      width: double.infinity,
+      height: 150,
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional(0, -1),
+                            child: Image.network(
+                              'https://picsum.photos/seed/815/600',
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 8,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 5),
+                              Text(
+                                'Exhaussted ...',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              SizedBox(height: 10),
+                              Expanded(
+                                child: Text(
+                                  'You are too weak, to attack. Wait till you get rest, go to medic or summon Fast Medic',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.blue),
+                            ),
+                            onPressed: () {
+                              playerControler.heal();
+                              callback(2);
+                            },
+                            child: Row(children: [Text('Heal me now')])),
+                        SizedBox(width: 7),
+                        OutlinedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.blue),
+                            ),
+                            onPressed: () {},
+                            child: Row(children: [Text('Go to medic')])),
+                        //button
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

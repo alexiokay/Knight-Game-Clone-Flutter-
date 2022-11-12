@@ -391,6 +391,7 @@ class QuestContent extends StatelessWidget {
   Widget build(BuildContext context) {
     PlayerController playerControler = Get.put(PlayerController());
     return Container(
+      height: isVisible ? 200 : 130,
       child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceAround,
 

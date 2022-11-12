@@ -22,49 +22,26 @@ final List menuItems = [
   'Polityka Prywatnosci',
 ];
 
-class ScreenMore extends StatelessWidget {
-  const ScreenMore({Key? key}) : super(key: key);
+const borderColor = Color.fromARGB(255, 115, 76, 30);
+
+class ScreenMore extends StatefulWidget {
+  final changeScreen;
+
+  const ScreenMore({Key? key, @required this.changeScreen}) : super(key: key);
+
+  @override
+  _ScreenMore createState() => _ScreenMore();
+}
+
+class _ScreenMore extends State<ScreenMore> {
+  int _selectedScreenIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    const borderColor = Color.fromARGB(255, 115, 76, 30);
-    return SingleChildScrollView(
-        child: IntrinsicHeight(
-            child: Column(children: [
-      GuildInvitation(),
-      Padding(
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: Container(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 35, 20, 7),
-                border: Border.all(
-                  color: borderColor,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(
-                  10,
-                ),
-              ),
-              child: Column(children: [
-                for (int i = 0;
-                    i < menuItems.length;
-                    i++) // rendering menuItems from the list
-                  Column(children: [
-                    MenuItem(menu_text: menuItems[i]),
-                    if (i + 1 !=
-                        menuItems
-                            .length) // if the items is not last of the list then return fake border
-                      const SizedBox(
-                        width: double.infinity,
-                        height: 2,
-                        child: const DecoratedBox(
-                          decoration: const BoxDecoration(color: borderColor),
-                        ),
-                      ),
-                  ])
-              ])))
-    ])));
+    return Scaffold(
+        backgroundColor: Color.fromARGB(255, 51, 24, 8),
+        body: SingleChildScrollView(
+            child: MainSubmenu(callback: widget.changeScreen)));
   }
 }
 
@@ -92,5 +69,51 @@ class MenuItem extends StatelessWidget {
                 Flexible(flex: 1, child: Image.asset('assets/icons/duel.png')),
               ],
             )));
+  }
+}
+
+class MainSubmenu extends StatefulWidget {
+  Function callback;
+
+  MainSubmenu({required this.callback});
+
+  @override
+  _MainSubmenu createState() => _MainSubmenu();
+}
+
+class _MainSubmenu extends State<MainSubmenu> {
+  _MainSubmenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+        child: Column(children: [
+      GuildInvitation(),
+      Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 35, 20, 7),
+                border: Border.all(
+                  color: borderColor,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(
+                  10,
+                ),
+              ),
+              child: Column(children: [
+                for (int i = 0;
+                    i < menuItems.length;
+                    i++) // rendering menuItems from the list
+                  InkWell(
+                      onTap: () {
+                        widget.callback(i +
+                            5); // 5 is the number of main screen indexes that should be ignored
+                      },
+                      child: MenuItem(menu_text: menuItems[i]))
+              ])))
+    ]));
   }
 }
