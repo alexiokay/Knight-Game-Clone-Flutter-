@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfirstapp/game_objects/Items.dart';
+import 'package:Cyber_Knights/game_objects/Items.dart';
 
 class PlayerProvider with ChangeNotifier {
   int _maxCourage = 50;

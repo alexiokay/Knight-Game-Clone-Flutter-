@@ -1,10 +1,10 @@
 // screen_b.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfirstapp/game_objects/Items.dart';
+import 'package:Cyber_Knights/game_objects/Items.dart';
 import 'package:get/get.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
-import 'package:myfirstapp/components/shop_item.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
+import 'package:Cyber_Knights/components/shop_item.dart';
 
 var item1 = Item(title: 'Antim', asset: 'assets/icons/duel.png', type: 'bow');
 var item2 = Item(title: 'Ur', asset: 'assets/icons/duel.png', type: 'sword');

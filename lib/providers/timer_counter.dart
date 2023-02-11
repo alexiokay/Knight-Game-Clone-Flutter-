@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
 
 var player2 = Get.put(PlayerController());
 

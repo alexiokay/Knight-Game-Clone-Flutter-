@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:myfirstapp/game_objects/Items.dart';
+import 'package:Cyber_Knights/game_objects/Items.dart';
 import 'package:get/get.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
 import 'package:intl/intl.dart';
-import 'package:myfirstapp/components/shop_item.dart';
+import 'package:Cyber_Knights/components/shop_item.dart';
 
 class Vassal {
   String name;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
 
 class GuildInvitation extends StatelessWidget {
   const GuildInvitation({Key? key}) : super(key: key);

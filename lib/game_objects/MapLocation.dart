@@ -1,4 +1,4 @@
-import 'package:myfirstapp/game_objects/Quests.dart';
+import 'package:Cyber_Knights/game_objects/Quests.dart';
 
 class MapLocation {
   String title;

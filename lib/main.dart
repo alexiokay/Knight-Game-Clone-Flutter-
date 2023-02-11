@@ -1,11 +1,11 @@
 // main.dart
 import 'package:flutter/material.dart';
-import 'package:myfirstapp/game_objects/Player.dart';
-import 'package:myfirstapp/game_objects/Countries.dart';
+import 'package:Cyber_Knights/game_objects/Player.dart';
+import 'package:Cyber_Knights/game_objects/Countries.dart';
 import 'package:provider/provider.dart';
-import 'package:myfirstapp/providers/old_player_provider.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
-import 'package:myfirstapp/providers/timer_counter.dart';
+import 'package:Cyber_Knights/providers/old_player_provider.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
+import 'package:Cyber_Knights/providers/timer_counter.dart';
 
 import 'package:get/get.dart';
 import 'screens/HomeScreen.dart.dart';
@@ -13,7 +13,7 @@ import 'screens/QuestScreen.dart';
 import 'screens/DuelScreen.dart';
 import 'screens/EquipmentScreen.dart';
 import 'screens/MoreScreen.dart';
-import 'package:myfirstapp/screens/menu_screens/all.dart';
+import 'package:Cyber_Knights/screens/menu_screens/all.dart';
 
 Future<void> main() async {
   //WidgetsFlutterBinding.ensureInitialized();

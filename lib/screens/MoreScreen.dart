@@ -1,6 +1,6 @@
 // screen_b.dart
 import 'package:flutter/material.dart';
-import 'package:myfirstapp/components/guildInvitation.dart';
+import 'package:Cyber_Knights/components/guildInvitation.dart';
 
 final List menuItems = [
   'Postac',

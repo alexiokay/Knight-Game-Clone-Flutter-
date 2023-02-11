@@ -1,14 +1,14 @@
 // screen_b.dart
 
-import 'package:myfirstapp/game_objects/Quests.dart';
-import 'package:myfirstapp/game_objects/Items.dart';
-import 'package:myfirstapp/game_objects/MapLocation.dart';
+import 'package:Cyber_Knights/game_objects/Quests.dart';
+import 'package:Cyber_Knights/game_objects/Items.dart';
+import 'package:Cyber_Knights/game_objects/MapLocation.dart';
 import 'package:get/get.dart';
 
-import 'package:myfirstapp/game_objects/Player.dart';
+import 'package:Cyber_Knights/game_objects/Player.dart';
 import 'package:provider/provider.dart';
-import 'package:myfirstapp/providers/old_player_provider.dart';
-import 'package:myfirstapp/providers/player_controller.dart';
+import 'package:Cyber_Knights/providers/old_player_provider.dart';
+import 'package:Cyber_Knights/providers/player_controller.dart';
 
 import 'package:flutter/material.dart';
 

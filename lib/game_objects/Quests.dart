@@ -1,4 +1,4 @@
-import 'package:myfirstapp/game_objects/Items.dart';
+import 'package:Cyber_Knights/game_objects/Items.dart';
 
 class QuestRequirements {
   List<Item> items;

@@ -1,4 +1,4 @@
-import 'package:myfirstapp/game_objects/Countries.dart';
+import 'package:Cyber_Knights/game_objects/Countries.dart';
 
 class Player {
   String username;
